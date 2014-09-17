@@ -1,21 +1,19 @@
 #!/usr/bin/env ruby
+require 'find'
+require 'git'
+require 'octokit'
+require 'tmpdir'
+
 class Gripst
-  require 'find'
-  require 'git'
-  require 'octokit'
-  require 'tmpdir'
 
   def initialize
-    @auth_token=ENV['GITHUB_USER_ACCESS_TOKEN']
+    @auth_token = ENV['GITHUB_USER_ACCESS_TOKEN']
     puts Dir.methods.grep("tmp").join " "
     @tmpdir = Dir.mktmpdir
   end
 
-  def initialized
-    if @auth_token != nil
-      return true
-    end
-    return false
+  def initialized?
+    !!@auth_token
   end
 
   def all_gists
@@ -71,7 +69,7 @@ end
 ################################################################################
 begin
   gripst = Gripst.new
-  if gripst.initialized
+  if gripst.initialized?
     gripst.all_gists.each do |id|
       gripst.grep_gist(ARGV[0],id)
     end
