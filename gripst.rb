@@ -16,17 +16,20 @@ class Gripst
     !!@auth_token
   end
 
-  def all_gists
-    all_gists = Array.new
+  def all_gist_ids
+    client.gists.map(&:id)
+  end
+
+  def client
+    @client ||= create_client
+  end
+
+  def create_client
     Octokit.auto_paginate = true
     client = Octokit::Client.new(:access_token => "#{@auth_token}")
     octouser = client.user
     octouser.login
-    raw_gists = client.gists
-    raw_gists.each do |gist|
-      all_gists.push(gist.id)
-    end
-    return all_gists
+    client
   end
 
   def clone(id)
@@ -70,7 +73,7 @@ end
 begin
   gripst = Gripst.new
   if gripst.initialized?
-    gripst.all_gists.each do |id|
+    gripst.all_gist_ids.each do |id|
       gripst.grep_gist(ARGV[0],id)
     end
   else
