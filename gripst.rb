@@ -5,6 +5,7 @@ require 'octokit'
 require 'tmpdir'
 
 class Gripst
+  attr_reader :tmpdir, :auth_token
 
   def initialize
     @auth_token = ENV['GITHUB_USER_ACCESS_TOKEN']
@@ -13,7 +14,7 @@ class Gripst
   end
 
   def initialized?
-    !!@auth_token
+    !!auth_token
   end
 
   def all_gist_ids
@@ -26,7 +27,7 @@ class Gripst
 
   def create_client
     Octokit.auto_paginate = true
-    client = Octokit::Client.new(:access_token => "#{@auth_token}")
+    client = Octokit::Client.new(:access_token => "#{auth_token}")
     octouser = client.user
     octouser.login
     client
@@ -34,7 +35,7 @@ class Gripst
 
   def clone(id)
     begin
-      g = Git.clone("https://#{@auth_token}@gist.github.com/#{id}.git", id, :path => "#{@tmpdir}")
+      g = Git.clone("https://#{auth_token}@gist.github.com/#{id}.git", id, :path => "#{tmpdir}")
     rescue
       $stderr.puts "ERROR: git fell down on #{id}"
       return false
@@ -44,8 +45,8 @@ class Gripst
 
   def grep_gist(regex,id)
     if clone(id)
-      Find.find("#{@tmpdir}/#{id}") do |path|
-      if path == "#{@tmpdir}/#{id}/.git"
+      Find.find("#{tmpdir}/#{id}") do |path|
+      if path == "#{tmpdir}/#{id}/.git"
           Find.prune
         else
           if File.file?(path)
@@ -54,11 +55,11 @@ class Gripst
               begin
                 matches = /#{regex}/.match(line)
               rescue ArgumentError
-                $stderr.puts "Skipping... #{id}(#{(path).gsub("#{@tmpdir}/#{id}/","")}) #{$!}"
+                $stderr.puts "Skipping... #{id}(#{(path).gsub("#{tmpdir}/#{id}/","")}) #{$!}"
                 sleep 300
               end
               if matches != nil
-                puts "#{id} (#{(path).gsub("#{@tmpdir}/#{id}/","")}) #{line}"
+                puts "#{id} (#{(path).gsub("#{tmpdir}/#{id}/","")}) #{line}"
               end
             end
           end
