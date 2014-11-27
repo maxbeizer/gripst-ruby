@@ -26,7 +26,6 @@ class Gripst
   end
 
   def create_client
-    Octokit.auto_paginate = true
     client = Octokit::Client.new(:access_token => "#{auth_token}")
     client.user.login
     client
@@ -42,30 +41,33 @@ class Gripst
   end
 
   def grep_gist(regex, id)
-    if clone(id)
-      Find.find("#{tmpdir}/#{id}") do |path|
-        if path == "#{tmpdir}/#{id}/.git"
-          Find.prune
-        else
-          if File.file?(path)
-            fh = File.new(path)
-            fh.each do |line|
-              begin
-                matches = /#{regex}/.match(line)
-              rescue ArgumentError
-                $stderr.puts "Skipping... #{id}(#{(path).gsub("#{tmpdir}/#{id}/","")}) #{$!}"
-                sleep 300
-              end
-              if matches != nil
-                puts "#{id} (#{(path).gsub("#{tmpdir}/#{id}/","")}) #{line}"
-              end
-            end
-          end
-        end
+    Find.find("#{tmpdir}/#{id}") do |path|
+      if path == "#{tmpdir}/#{id}/.git"
+        Find.prune
+      else
+        loop_through_lines_of_a_gist(regex, id, path) if File.file?(path)
       end
+    end if clone id
+  end
+
+  private
+
+  def loop_through_lines_of_a_gist(regex, id, path)
+    File.new(path).each do |line|
+      begin
+        matches = /#{regex}/.match(line)
+      rescue ArgumentError
+        $stderr.puts "Skipping... #{id}(#{(path).gsub("#{tmpdir}/#{id}/","")}) #{$!}"
+        sleep 300
+      end
+
+       matches.nil? ?  'No matches' : display_matches(matches, id, path, line)
     end
   end
 
+  def display_matches(matches, id, path, line)
+    puts "#{id} (#{(path).gsub("#{tmpdir}/#{id}/","")}) #{line}"
+  end
 end
 
 ################################################################################
