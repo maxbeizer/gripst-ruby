@@ -44,11 +44,8 @@ class Gripst
   def grep_gist(regex, id)
     Find.find("#{tmpdir}/#{id}") do |path|
       param_obj = ParamObj.new(id, path)
-      if path == "#{tmpdir}/#{id}/.git"
-        Find.prune
-      else
-        loop_through_lines_of_a_gist(regex, param_obj) if File.file?(path)
-      end
+      return Find.prune if git_dir? param_obj
+      loop_through_lines_of_a_gist(regex, param_obj) if File.file? path
     end if clone id
   end
 
@@ -69,6 +66,10 @@ class Gripst
 
   def display_matches(matches, param_obj, line)
     puts "#{param_obj.id} (#{(param_obj.path).gsub("#{tmpdir}/#{param_obj.id}/","")}) #{line}"
+  end
+
+  def git_dir?(obj)
+    obj.path == "#{tmpdir}/#{obj.id}/.git"
   end
 end
 
