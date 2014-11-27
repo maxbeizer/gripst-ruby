@@ -60,7 +60,7 @@ class Gripst
         sleep 300
       end
 
-       matches.nil? ?  'No matches' : display_matches(param_obj, line)
+      display_matches(param_obj, line) unless matches.nil?
     end
   end
 
