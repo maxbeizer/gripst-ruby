@@ -28,22 +28,20 @@ class Gripst
   def create_client
     Octokit.auto_paginate = true
     client = Octokit::Client.new(:access_token => "#{auth_token}")
-    octouser = client.user
-    octouser.login
+    client.user.login
     client
   end
 
   def clone(id)
-    begin
-      g = Git.clone("https://#{auth_token}@gist.github.com/#{id}.git", id, :path => "#{tmpdir}")
-    rescue
-      $stderr.puts "ERROR: git fell down on #{id}"
-      return false
-    end
-    return true
+    Git.clone("https://#{auth_token}@gist.github.com/#{id}.git", id, :path => "#{tmpdir}")
+    true
+  rescue => e
+    $stderr.puts "ERROR: git fell down on #{id}"
+    $stderr.puts "ERROR: #{e}"
+    false
   end
 
-  def grep_gist(regex,id)
+  def grep_gist(regex, id)
     if clone(id)
       Find.find("#{tmpdir}/#{id}") do |path|
       if path == "#{tmpdir}/#{id}/.git"
@@ -75,7 +73,7 @@ begin
   gripst = Gripst.new
   if gripst.initialized?
     gripst.all_gist_ids.each do |id|
-      gripst.grep_gist(ARGV[0],id)
+      gripst.grep_gist(ARGV[0], id)
     end
   else
     $stderr.puts "please set GITHUB_USER_ACCESS_TOKEN in env"
