@@ -56,7 +56,7 @@ class Gripst
       begin
         matches = /#{regex}/.match(line)
       rescue ArgumentError
-        $stderr.puts "Skipping... #{param_obj.id}(#{(param_obj.path).gsub("#{tmpdir}/#{param_obj.id}/","")}) #{$!}"
+        $stderr.puts "Skipping... #{param_obj.id} (#{extract_gistfile_name(param_obj.path)}) #{$!}"
         sleep 300
       end
 
@@ -65,11 +65,15 @@ class Gripst
   end
 
   def display_matches(matches, param_obj, line)
-    puts "#{param_obj.id} (#{(param_obj.path).gsub("#{tmpdir}/#{param_obj.id}/","")}) #{line}"
+    puts "#{param_obj.id} (#{extract_gistfile_name(param_obj.path)}) #{line}"
   end
 
   def git_dir?(obj)
     obj.path == "#{tmpdir}/#{obj.id}/.git"
+  end
+
+  def extract_gistfile_name(path)
+    path.split('/')[-1]
   end
 end
 
