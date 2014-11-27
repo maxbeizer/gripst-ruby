@@ -1,16 +1,12 @@
 require 'spec_helper'
-require_relative '../gripst'
+require_relative '../lib/gripst'
 require 'pry'
 
 RSpec.describe Gripst do
   context 'without a user_access_token' do
-    let(:gripst_without_token) { Gripst.new }
-
-    before :each do
-      stub_const('ENV', {'GITHUB_USER_ACCESS_TOKEN' => nil})
-    end
-
     it '#initialized? returns false' do
+      stub_const('ENV', { 'GITHUB_USER_ACCESS_TOKEN' => nil })
+      gripst_without_token = Gripst.new
       expect(gripst_without_token.initialized?).to be false
     end
   end
@@ -19,7 +15,7 @@ RSpec.describe Gripst do
     let(:gripst_with_token) { Gripst.new }
 
     before :each do
-      stub_const('ENV', {'GITHUB_USER_ACCESS_TOKEN' => 'asdf'})
+      stub_const('ENV', { 'GITHUB_USER_ACCESS_TOKEN' => 'asdf' })
     end
 
     it '#initialized? returns true' do
@@ -40,7 +36,7 @@ RSpec.describe Gripst do
     let(:gripst) { Gripst.new }
 
     before :each do
-      stub_const('ENV', {'GITHUB_USER_ACCESS_TOKEN' => 'asdf'})
+      stub_const('ENV', { 'GITHUB_USER_ACCESS_TOKEN' => 'asdf' })
     end
 
     context 'with no error' do
