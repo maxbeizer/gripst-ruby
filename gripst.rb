@@ -26,12 +26,6 @@ class Gripst
     @client ||= create_client
   end
 
-  def create_client
-    client = Octokit::Client.new(:access_token => "#{auth_token}")
-    client.user.login
-    client
-  end
-
   def clone(id)
     Git.clone("https://#{auth_token}@gist.github.com/#{id}.git", id, :path => "#{tmpdir}")
     true
@@ -50,6 +44,12 @@ class Gripst
   end
 
   private
+
+  def create_client
+    client = Octokit::Client.new(:access_token => "#{auth_token}")
+    client.user.login
+    client
+  end
 
   def loop_through_lines_of_a_gist(regex, param_obj)
     File.new(param_obj.path).each do |line|
