@@ -6,6 +6,10 @@ RSpec.describe Gripst do
   context 'without a user_access_token' do
     let(:gripst_without_token) { Gripst.new }
 
+    before :each do
+      stub_const('ENV', {'GITHUB_USER_ACCESS_TOKEN' => nil})
+    end
+
     it '#initialized? returns false' do
       expect(gripst_without_token.initialized?).to be false
     end
