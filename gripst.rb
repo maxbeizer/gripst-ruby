@@ -44,7 +44,7 @@ class Gripst
   def grep_gist(regex, id)
     if clone(id)
       Find.find("#{tmpdir}/#{id}") do |path|
-      if path == "#{tmpdir}/#{id}/.git"
+        if path == "#{tmpdir}/#{id}/.git"
           Find.prune
         else
           if File.file?(path)
