@@ -41,7 +41,7 @@ class Gripst
     false
   end
 
-  def grep_gist(regex, id)
+  def run(regex, id)
     Find.find("#{tmpdir}/#{id}") do |path|
       param_obj = ParamObj.new(id, path)
       return Find.prune if git_dir? param_obj
@@ -83,7 +83,7 @@ end
 begin
   gripst = Gripst.new
   $stderr.puts "please set GITHUB_USER_ACCESS_TOKEN in env" unless gripst.initialized?
-  gripst.all_gist_ids.each { |id| gripst.grep_gist(ARGV[0], id) }
+  gripst.all_gist_ids.each { |id| gripst.run(ARGV[0], id) }
 rescue SystemExit, Interrupt
   $stderr.puts 'Bye Bye'
 end
