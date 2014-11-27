@@ -73,13 +73,8 @@ end
 ################################################################################
 begin
   gripst = Gripst.new
-  if gripst.initialized?
-    gripst.all_gist_ids.each do |id|
-      gripst.grep_gist(ARGV[0], id)
-    end
-  else
-    $stderr.puts "please set GITHUB_USER_ACCESS_TOKEN in env"
-  end
+  return $stderr.puts "please set GITHUB_USER_ACCESS_TOKEN in env" unless gripst.initialized?
+  gripst.all_gist_ids.each { |id| gripst.grep_gist(ARGV[0], id) }
 rescue SystemExit, Interrupt
-  $stderr.puts "Ok."
+  $stderr.puts 'Bye Bye'
 end
