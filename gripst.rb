@@ -60,11 +60,11 @@ class Gripst
         sleep 300
       end
 
-       matches.nil? ?  'No matches' : display_matches(matches, param_obj, line)
+       matches.nil? ?  'No matches' : display_matches(param_obj, line)
     end
   end
 
-  def display_matches(matches, param_obj, line)
+  def display_matches(param_obj, line)
     puts "#{param_obj.id} (#{extract_gistfile_name(param_obj.path)}) #{line}"
   end
 
