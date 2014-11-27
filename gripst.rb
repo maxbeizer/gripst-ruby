@@ -6,6 +6,7 @@ require 'tmpdir'
 
 class Gripst
   attr_reader :tmpdir, :auth_token
+  ParamObj = Struct.new(:id, :path)
 
   def initialize
     @auth_token = ENV['GITHUB_USER_ACCESS_TOKEN']
@@ -42,31 +43,32 @@ class Gripst
 
   def grep_gist(regex, id)
     Find.find("#{tmpdir}/#{id}") do |path|
+      param_obj = ParamObj.new(id, path)
       if path == "#{tmpdir}/#{id}/.git"
         Find.prune
       else
-        loop_through_lines_of_a_gist(regex, id, path) if File.file?(path)
+        loop_through_lines_of_a_gist(regex, param_obj) if File.file?(path)
       end
     end if clone id
   end
 
   private
 
-  def loop_through_lines_of_a_gist(regex, id, path)
-    File.new(path).each do |line|
+  def loop_through_lines_of_a_gist(regex, param_obj)
+    File.new(param_obj.path).each do |line|
       begin
         matches = /#{regex}/.match(line)
       rescue ArgumentError
-        $stderr.puts "Skipping... #{id}(#{(path).gsub("#{tmpdir}/#{id}/","")}) #{$!}"
+        $stderr.puts "Skipping... #{param_obj.id}(#{(param_obj.path).gsub("#{tmpdir}/#{param_obj.id}/","")}) #{$!}"
         sleep 300
       end
 
-       matches.nil? ?  'No matches' : display_matches(matches, id, path, line)
+       matches.nil? ?  'No matches' : display_matches(matches, param_obj, line)
     end
   end
 
-  def display_matches(matches, id, path, line)
-    puts "#{id} (#{(path).gsub("#{tmpdir}/#{id}/","")}) #{line}"
+  def display_matches(matches, param_obj, line)
+    puts "#{param_obj.id} (#{(param_obj.path).gsub("#{tmpdir}/#{param_obj.id}/","")}) #{line}"
   end
 end
 
