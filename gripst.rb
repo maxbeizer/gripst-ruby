@@ -54,17 +54,15 @@ class Gripst
   def loop_through_lines_of_a_gist(regex, param_obj)
     File.new(param_obj.path).each do |line|
       begin
-        matches = /#{regex}/.match(line)
+        display_match(param_obj, line) if /#{regex}/.match line
       rescue ArgumentError
         $stderr.puts "Skipping... #{output_info_string(param_obj)} #{$!}"
         sleep 300
       end
-
-      display_matches(param_obj, line) unless matches.nil?
     end
   end
 
-  def display_matches(param_obj, line)
+  def display_match(param_obj, line)
     puts "#{output_info_string(param_obj)} #{line}"
   end
 
