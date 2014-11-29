@@ -1,6 +1,7 @@
 require 'find'
 require 'tmpdir'
 require 'octokit'
+require 'git'
 require_relative 'string'
 require_relative 'version'
 
