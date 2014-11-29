@@ -2,7 +2,8 @@ require 'find'
 require 'git'
 require 'octokit'
 require 'tmpdir'
-require_relative 'string'
+require 'gripst/string'
+require 'gripst/version'
 
 class Gripst
   attr_reader :tmpdir, :auth_token
