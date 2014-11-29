@@ -53,4 +53,31 @@ RSpec.describe Gripst do
       end
     end
   end
+
+  describe '#run' do
+    let(:gripst) { Gripst.new }
+
+    before :each do
+      stub_const('ENV', { 'GITHUB_USER_ACCESS_TOKEN' => 'asdf' })
+    end
+
+    context 'when clone fails' do
+      it 'returns silently' do
+        allow(gripst).to receive(:clone).and_return false
+        expect(gripst).to receive(:loop_through_lines_of_a_gist).exactly(0).times
+        gripst.run('asdf', 'asdf')
+      end
+    end
+
+    context 'when clone succeeds' do
+      it 'returns with Find.prune if the path is a git dir', :focus => true do
+        allow(gripst).to receive(:clone).and_return true
+        path = '.git'
+        allow(Find).to receive(:find).and_yield path
+        allow(gripst).to receive(:git_dir?).and_return true
+        expect(Find).to receive(:prune)
+        gripst.run('asdf', 'asdf')
+      end
+    end
+  end
 end
