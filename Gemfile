@@ -1,2 +1,3 @@
-gem 'git'
-gem 'octokit'
+source 'https://rubygems.org'
+
+gemspec
