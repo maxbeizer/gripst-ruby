@@ -6,13 +6,13 @@ RSpec.describe Gripst do
   context 'without a user_access_token' do
     it '#initialized? returns false' do
       stub_const('ENV', { 'GITHUB_USER_ACCESS_TOKEN' => nil })
-      gripst_without_token = Gripst.new
+      gripst_without_token = Gripst::Gripst.new
       expect(gripst_without_token.initialized?).to be false
     end
   end
 
   context 'with a user_access_token' do
-    let(:gripst_with_token) { Gripst.new }
+    let(:gripst_with_token) { Gripst::Gripst.new }
 
     before :each do
       stub_const('ENV', { 'GITHUB_USER_ACCESS_TOKEN' => 'asdf' })
@@ -33,7 +33,7 @@ RSpec.describe Gripst do
   end
 
   describe '#clone' do
-    let(:gripst) { Gripst.new }
+    let(:gripst) { Gripst::Gripst.new }
 
     before :each do
       stub_const('ENV', { 'GITHUB_USER_ACCESS_TOKEN' => 'asdf' })
@@ -55,7 +55,7 @@ RSpec.describe Gripst do
   end
 
   describe '#run' do
-    let(:gripst) { Gripst.new }
+    let(:gripst) { Gripst::Gripst.new }
 
     before :each do
       stub_const('ENV', { 'GITHUB_USER_ACCESS_TOKEN' => 'asdf' })
@@ -70,7 +70,7 @@ RSpec.describe Gripst do
     end
 
     context 'when clone succeeds' do
-      it 'returns with Find.prune if the path is a git dir', :focus => true do
+      it 'returns with Find.prune if the path is a git dir' do
         allow(gripst).to receive(:clone).and_return true
         path = '.git'
         allow(Find).to receive(:find).and_yield path
