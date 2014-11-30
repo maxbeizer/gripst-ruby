@@ -25,6 +25,14 @@ gripst "(stuff|things)"
 5. Create new Pull Request
 
 
+## Tests
+
+```
+git clone git@github.com:maxbeizer/gripst.git
+rake install
+rake spec
+```
+
 ## Credits
 
 This Ruby script was originally written by [James White](https://github.com/jameswhite/).
