@@ -3,6 +3,10 @@ require_relative '../lib/gripst'
 require 'pry'
 
 RSpec.describe Gripst do
+  before :all do
+    $stderr.reopen '/dev/null', 'w'
+  end
+
   context 'without a user_access_token' do
     it '#initialized? returns false' do
       stub_const('ENV', { 'GITHUB_USER_ACCESS_TOKEN' => nil })
