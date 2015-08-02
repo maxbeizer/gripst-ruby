@@ -1,5 +1,6 @@
 .ruby-version
 .ruby-gemset
+.rbenv-gemsets
 .rpsec
 *.gem
 *.rbc

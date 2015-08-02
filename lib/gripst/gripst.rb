@@ -3,6 +3,7 @@ require 'tmpdir'
 require 'octokit'
 require 'git'
 require_relative 'string'
+require_relative 'client'
 require_relative 'version'
 
 module Gripst
@@ -11,7 +12,7 @@ module Gripst
     ParamObj = Struct.new(:id, :path)
 
     def initialize
-      @auth_token = ENV['GITHUB_USER_ACCESS_TOKEN']
+      @auth_token = retrieve_auth_token
       @tmpdir = Dir.mktmpdir
     end
 
@@ -21,10 +22,6 @@ module Gripst
 
     def all_gist_ids
       client.gists.map(&:id)
-    end
-
-    def client
-      @client ||= create_client
     end
 
     def clone(id)
@@ -45,6 +42,10 @@ module Gripst
     end
 
     private
+
+    def client
+      @client ||= create_client
+    end
 
     def create_client
       client = Octokit::Client.new :access_token => "#{auth_token}"
@@ -77,6 +78,11 @@ module Gripst
 
     def extract_gistfile_name(path)
       path.split('/')[-1].yellow
+    end
+
+    def retrieve_auth_token
+      return ENV['GITHUB_USER_ACCESS_TOKEN'] if ENV['GITHUB_USER_ACCESS_TOKEN']
+      Client.get_auth_token
     end
   end
 end
