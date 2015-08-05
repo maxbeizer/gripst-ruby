@@ -44,13 +44,7 @@ module Gripst
     private
 
     def client
-      @client ||= create_client
-    end
-
-    def create_client
-      client = Octokit::Client.new :access_token => "#{auth_token}"
-      client.user.login
-      client
+      @client ||= Client.login_with_oauth auth_token
     end
 
     def loop_through_lines_of_a_gist(regex, param_obj)

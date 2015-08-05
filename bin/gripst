@@ -8,7 +8,6 @@ require 'gripst'
 
 begin
   gripst = Gripst::Gripst.new
-  raise 'please set GITHUB_USER_ACCESS_TOKEN as instructed in the README' unless gripst.initialized?
   puts 'gripsting'
   gripst.all_gist_ids.each { |id| gripst.run(ARGV[0], id) }
 rescue SystemExit, Interrupt
