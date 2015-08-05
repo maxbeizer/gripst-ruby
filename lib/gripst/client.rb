@@ -11,10 +11,22 @@ class Client
       authorizer.authorize
     end
 
+    def login_with_oauth(oauth_token)
+      client = Octokit::Client.new :access_token => oauth_token
+      client.user.login
+      client
+    rescue Octokit::Unauthorized
+      puts '---'
+      puts '---'
+      puts '---'
+      puts 'Unable to create personal access token on github. Is the gripst application already set? https://github.com/settings/tokens'
+      exit
+    end
+
     private
 
     def oauth_from_file
-      File.open PATH, &:readline if File.exists? PATH
+      File.open PATH, &:readline if File.exists?(PATH) && !File.zero?(PATH)
     end
   end
 
@@ -27,16 +39,21 @@ class Client
   end
 
   def authorize
-
     begin
       auth_token = client.create_authorization :scopes => ['gists'], :note => 'gripst'
     rescue Octokit::OneTimePasswordRequired
       otp = get_otp
       auth_token = authorize_with_otp otp
+    rescue Octokit::Unauthorized
+      puts '---'
+      puts '---'
+      puts '---'
+      puts 'Username or password was incorrect'
+      exit
     end
 
     write_auth_token auth_token
-    login_with_oauth auth_token
+    auth_token
   end
 
   private
@@ -72,14 +89,12 @@ class Client
                                            :note => 'gripst',
                                            :headers => { 'X-GitHub-OTP' => token }
     response[:token]
-  rescue Octokit::UnprocessableEntity => e
-    raise "422 error: #{e}"
-  end
-
-  def login_with_oauth(oauth_token)
-    client = Octokit::Client.new :access_token => oauth_token
-    client.user.login
-    client
+  rescue Octokit::UnprocessableEntity
+    puts '---'
+    puts '---'
+    puts '---'
+    puts 'Unable to create personal access token on github. Is the gripst application already set? https://github.com/settings/tokens'
+    exit
   end
 
   def write_auth_token(oauth_token)
