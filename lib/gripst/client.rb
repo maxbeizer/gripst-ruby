@@ -1,5 +1,4 @@
 require 'octokit'
-require 'pry'
 
 class Client
   PATH = ENV['HOME'] + '/.gripst'
