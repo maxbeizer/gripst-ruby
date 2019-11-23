@@ -1,0 +1,3 @@
+#!/usr/bin/env ruby
+
+system('bundle exec pry -r ./lib/gripst.rb')
