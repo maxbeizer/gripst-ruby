@@ -4,7 +4,7 @@ require 'find'
 require 'tmpdir'
 
 module Gripst
-  class Gripst
+  class Runner
     attr_reader :tmpdir
     ParamObj = Struct.new(:id, :path)
 

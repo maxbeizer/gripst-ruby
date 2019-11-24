@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe Gripst do
+RSpec.describe Gripst::Runner do
   before :all do
     $stderr.reopen '/dev/null', 'w'
   end
@@ -8,13 +8,13 @@ RSpec.describe Gripst do
   context 'without a user_access_token' do
     it '#initialized? returns false' do
       stub_const('ENV', { 'GITHUB_USER_ACCESS_TOKEN' => nil })
-      gripst_without_token = Gripst::Gripst.new
+      gripst_without_token = Gripst::Runner.new
       expect(gripst_without_token.initialized?).to be false
     end
   end
 
   context 'with a user_access_token' do
-    let(:gripst_with_token) { Gripst::Gripst.new }
+    let(:gripst_with_token) { Gripst::Runner.new }
 
     before :each do
       stub_const('ENV', { 'GITHUB_USER_ACCESS_TOKEN' => 'asdf' })
@@ -35,7 +35,7 @@ RSpec.describe Gripst do
   end
 
   describe '#clone' do
-    let(:gripst) { Gripst::Gripst.new }
+    let(:gripst) { Gripst::Runner.new }
 
     before :each do
       stub_const('ENV', { 'GITHUB_USER_ACCESS_TOKEN' => 'asdf' })
@@ -57,7 +57,7 @@ RSpec.describe Gripst do
   end
 
   describe '#run' do
-    let(:gripst) { Gripst::Gripst.new }
+    let(:gripst) { Gripst::Runner.new }
 
     before :each do
       stub_const('ENV', { 'GITHUB_USER_ACCESS_TOKEN' => 'asdf' })
