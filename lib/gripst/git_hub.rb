@@ -59,14 +59,14 @@ module Gripst
 
     def get_username
       puts 'Enter your GitHub username'
-      STDIN.gets.chomp
+      $stdin.gets.chomp
     end
 
     def get_password
       system 'stty -echo'
       puts 'Enter your GitHub password'
       puts '(the input will be hidden)'
-      STDIN.gets.chomp
+      $stdin.gets.chomp
     ensure
       system 'stty echo'
     end
@@ -74,7 +74,7 @@ module Gripst
     def get_otp
       puts 'Looks like you have 2FA. Smart move.'
       puts 'Enter the OTP from GitHub'
-      STDIN.gets.chomp
+      $stdin.gets.chomp
     end
 
     def client
