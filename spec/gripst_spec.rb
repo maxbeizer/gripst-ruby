@@ -1,9 +1,5 @@
 # frozen_string_literal: true
 
-require 'spec_helper'
-require_relative '../lib/gripst'
-require 'pry'
-
 RSpec.describe Gripst do
   before :all do
     $stderr.reopen '/dev/null', 'w'

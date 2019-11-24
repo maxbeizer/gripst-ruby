@@ -27,7 +27,7 @@ class Client
     private
 
     def oauth_from_file
-      File.open PATH, &:readline if File.exists?(PATH) && !File.zero?(PATH)
+      File.open PATH, &:readline if File.exist?(PATH) && !File.zero?(PATH)
     end
   end
 

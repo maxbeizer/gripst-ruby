@@ -9,7 +9,7 @@ $LOAD_PATH << source_path
 require 'gripst'
 
 begin
-  gripst = Gripst::Gripst.new
+  gripst = Gripst::Gripst.new(config: Gripst::Config.new.setup)
   puts 'gripsting'
   gripst.all_gist_ids.each { |id| gripst.run(ARGV[0], id) }
 rescue SystemExit, Interrupt

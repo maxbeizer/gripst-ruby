@@ -4,17 +4,20 @@ require 'find'
 require 'tmpdir'
 require 'octokit'
 require 'git'
-require_relative 'string'
+# require_relative 'string'
 require_relative 'client'
-require_relative 'version'
+# require_relative 'version'
 
 module Gripst
   class Gripst
-    attr_reader :tmpdir, :auth_token
+    attr_reader :tmpdir
     ParamObj = Struct.new(:id, :path)
 
-    def initialize
-      @auth_token = retrieve_auth_token
+    def initialize(config:)
+      @config = config
+      @auth_token = config.auth_token
+      @github = config.github
+      @git = config.git
       @tmpdir = Dir.mktmpdir
     end
 
@@ -23,11 +26,11 @@ module Gripst
     end
 
     def all_gist_ids
-      client.gists.map(&:id)
+      @github.gists.map(&:id)
     end
 
     def clone(id)
-      Git.clone "https://#{auth_token}@gist.github.com/#{id}.git", id, :path => "#{tmpdir}"
+      @git.clone "https://#{@auth_token}@gist.github.com/#{id}.git", id, :path => "#{tmpdir}"
       true
     rescue => e # TODO figure out what error this is could be and not rescue bare exception
       $stderr.puts "ERROR: git fell down on #{id}"
@@ -44,10 +47,6 @@ module Gripst
     end
 
     private
-
-    def client
-      @client ||= Client.login_with_oauth auth_token
-    end
 
     def loop_through_lines_of_a_gist(regex, param_obj)
       File.new(param_obj.path).each do |line|
@@ -74,11 +73,6 @@ module Gripst
 
     def extract_gistfile_name(path)
       path.split('/')[-1].yellow
-    end
-
-    def retrieve_auth_token
-      return ENV['GITHUB_USER_ACCESS_TOKEN'] if ENV['GITHUB_USER_ACCESS_TOKEN']
-      Client.get_auth_token
     end
   end
 end

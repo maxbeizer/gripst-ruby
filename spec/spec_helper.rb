@@ -1,5 +1,8 @@
 # frozen_string_literal: true
 
+require File.expand_path('../../lib/gripst', __FILE__)
+require 'pry'
+
 RSpec.configure do |config|
   config.mock_with :rspec do |mocks|
     mocks.verify_partial_doubles = true
