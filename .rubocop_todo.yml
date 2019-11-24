@@ -107,24 +107,6 @@ Style/ExpandPathArguments:
     - 'Rakefile'
     - 'gripst.gemspec'
 
-# Offense count: 12
-# Cop supports --auto-correct.
-# Configuration parameters: EnforcedStyle.
-# SupportedStyles: always, never
-Style/FrozenStringLiteralComment:
-  Exclude:
-    - 'Gemfile'
-    - 'Rakefile'
-    - 'bin/gripst'
-    - 'gripst.gemspec'
-    - 'lib/gripst.rb'
-    - 'lib/gripst/client.rb'
-    - 'lib/gripst/gripst.rb'
-    - 'lib/gripst/string.rb'
-    - 'lib/gripst/version.rb'
-    - 'spec/gripst_spec.rb'
-    - 'spec/spec_helper.rb'
-    - 'tasks/rspec.rake'
 
 # Offense count: 9
 # Cop supports --auto-correct.
