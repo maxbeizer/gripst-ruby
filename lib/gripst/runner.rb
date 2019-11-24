@@ -16,6 +16,10 @@ module Gripst
       @tmpdir = Dir.mktmpdir
     end
 
+    def all_gists
+      @github.gists
+    end
+
     def all_gist_ids
       @github.gists.map(&:id)
     end

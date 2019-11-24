@@ -8,9 +8,10 @@ module Gripst
                 :git,
                 :auth_token
 
-    def initialize(github: GitHub, auth_token: nil, git: Git, env: ENV)
+    def initialize(github: GitHub, auth_token: nil, git: Git, env: ENV, config_path: nil)
       @env = env
       @github = github
+      @config_path = config_path || @env['HOME'] + '/.gripst'
       @auth_token = auth_token || fetch_auth_token
       @git = git
     end
@@ -23,7 +24,7 @@ module Gripst
     private
 
     def fetch_auth_token
-      @env['GITHUB_USER_ACCESS_TOKEN'] || github.get_auth_token
+      @env['GITHUB_USER_ACCESS_TOKEN'] || github.get_auth_token(@config_path)
     end
   end
 end

@@ -3,13 +3,9 @@
 module Gripst
   # A class to interact with GitHub
   class GitHub
-    PATH = ENV['HOME'] + '/.gripst'
-
     class << self
-      def get_auth_token
-        return oauth_from_file if oauth_from_file
-
-        new.authorize
+      def get_auth_token(path)
+        oauth_from_file(path) || new.authorize
       end
 
       def login_with_oauth(oauth_token)
@@ -26,8 +22,10 @@ module Gripst
 
       private
 
-      def oauth_from_file
-        File.open PATH, &:readline if File.exist?(PATH) && !File.zero?(PATH)
+      def oauth_from_file(path)
+        return unless File.exist?(path) && !File.zero?(path)
+
+        File.open(path, &:readline).strip
       end
     end
 
