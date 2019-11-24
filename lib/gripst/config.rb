@@ -4,27 +4,28 @@ module Gripst
   # A class to hold configuration for Gripst
   class Config
 
-    attr_reader :github,
+    attr_reader :git_hub,
                 :git,
                 :auth_token
 
-    def initialize(github: GitHub, auth_token: nil, git: Git, env: ENV, config_path: nil)
+    def initialize(git_hub: GitHub, auth_token: nil, git: Git, env: ENV, config_path: nil)
       @env = env
-      @github = github
+      @git_hub = git_hub
       @config_path = config_path || @env['HOME'] + '/.gripst'
       @auth_token = auth_token || fetch_auth_token
       @git = git
     end
 
     def setup
-      @github = @github.login_with_oauth(auth_token)
+      @git_hub = @git_hub.login_with_oauth(auth_token)
+      @git_hub.auto_paginate = true
       self
     end
 
     private
 
     def fetch_auth_token
-      @env['GITHUB_USER_ACCESS_TOKEN'] || github.get_auth_token(@config_path)
+      @env['GITHUB_USER_ACCESS_TOKEN'] || git_hub.get_auth_token(@config_path)
     end
   end
 end

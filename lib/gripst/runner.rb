@@ -11,17 +11,13 @@ module Gripst
     def initialize(config:)
       @config = config
       @auth_token = config.auth_token
-      @github = config.github
+      @git_hub = config.git_hub
       @git = config.git
       @tmpdir = Dir.mktmpdir
     end
 
-    def all_gists
-      @github.gists
-    end
-
     def all_gist_ids
-      @github.gists.map(&:id)
+      @git_hub.gists.map(&:id)
     end
 
     def clone(id)
