@@ -23,7 +23,7 @@ module Gripst
     def clone(id)
       @git.clone "https://#{@auth_token}@gist.github.com/#{id}.git", id, :path => "#{tmpdir}"
       true
-    rescue => e # TODO figure out what error this is could be and not rescue bare exception
+    rescue StandardError => e
       $stderr.puts "ERROR: git fell down on #{id}"
       $stderr.puts "ERROR: #{e}"
       false

@@ -4,7 +4,7 @@ require 'git'
 require 'octokit'
 
 require 'gripst/version'
-require 'gripst/client'
+require 'gripst/git_hub'
 require 'gripst/runner'
 require 'gripst/string'
 require 'gripst/config'
