@@ -1,3 +1,5 @@
-#!/usr/bin/env ruby
+#!/usr/bin/env bash
 
-system('bundle exec pry -r ./lib/gripst.rb')
+set -e
+
+bundle exec pry -r ./lib/gripst.rb
