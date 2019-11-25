@@ -10,23 +10,23 @@ RSpec.describe Gripst::Config do
 
     it "checks the environment for a variable" do
       token = 'via_env_token'
-      env = { 'GITHUB_USER_ACCESS_TOKEN' => token }
+      env = { 'GITHUB_USER_ACCESS_TOKEN' => token, 'HOME' => '~' }
       result = Gripst::Config.new(env: env).auth_token
       expect(result).to eq token
     end
 
     it "fetches the token via the client if it does not otherwise exist" do
       token = 'via_client_token'
-      client = Struct.new(:get_auth_token).new(token)
-      result = Gripst::Config.new(github: client).auth_token
+      client = allow(Gripst::GitHub).to receive(:get_auth_token).and_return(token)
+      result = Gripst::Config.new.auth_token
       expect(result).to eq token
     end
   end
 
-  describe "github" do
-    it "defaults to Gripst::Client" do
-      result = subject.github
-      expect(result).to eq Client
+  describe "git_hub" do
+    it "defaults to Gripst::GitHub" do
+      result = subject.git_hub
+      expect(result).to eq Gripst::GitHub
     end
   end
 
