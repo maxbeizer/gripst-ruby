@@ -30,11 +30,13 @@ module Gripst
     end
 
     def run(regex, id)
+      return unless clone(id)
+
       Find.find("#{tmpdir}/#{id}") do |path|
         param_obj = ParamObj.new(id, path)
         return Find.prune if git_dir? param_obj
         loop_through_lines_of_a_gist(regex, param_obj) if File.file? path
-      end if clone id
+      end
     end
 
     private

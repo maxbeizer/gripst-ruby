@@ -1,85 +1,43 @@
 # frozen_string_literal: true
 
 RSpec.describe Gripst::Runner do
-  before :all do
-    $stderr.reopen '/dev/null', 'w'
-  end
+  describe 'clone' do
+    it 'when clone succeeds it returns true' do
+      config = Gripst::Config.new(:git => HappyGit)
+      result = Gripst::Runner.new(:config => config).clone(123)
+      expect(result).to eq true
+    end
 
-  context 'without a user_access_token' do
-    it '#initialized? returns false' do
-      stub_const('ENV', { 'GITHUB_USER_ACCESS_TOKEN' => nil })
-      gripst_without_token = Gripst::Runner.new
-      expect(gripst_without_token.initialized?).to be false
+    it 'when clone fails it returns false' do
+      config = Gripst::Config.new(:git => SadGit)
+      result = Gripst::Runner.new(:config => config).clone(123)
+      expect(result).to eq false
     end
   end
 
-  context 'with a user_access_token' do
-    let(:gripst_with_token) { Gripst::Runner.new }
-
-    before :each do
-      stub_const('ENV', { 'GITHUB_USER_ACCESS_TOKEN' => 'asdf' })
-    end
-
-    it '#initialized? returns true' do
-      expect(gripst_with_token.initialized?).to be true
-    end
-
-    describe "#all_gist_ids" do
-      it "returns an array of ids of all gists for a given user" do
-        Gist = Struct.new(:id)
-        allow(gripst_with_token).to receive(:client).and_return(double('client'))
-        allow(gripst_with_token.client).to receive(:gists).and_return([Gist.new(123), Gist.new(234), Gist.new(345)])
-        expect(gripst_with_token.all_gist_ids).to include 123, 234, 345
-      end
+  describe 'all_gist_ids' do
+    it 'returns ids from all the gists that git can fetch' do
+      config = Gripst::Config.new(:git_hub => GHMock, :auth_token => '123')
+      result = Gripst::Runner.new(:config => config).all_gist_ids
+      expect(result).to eq Array(1..3) # see GHMock
     end
   end
 
-  describe '#clone' do
-    let(:gripst) { Gripst::Runner.new }
-
-    before :each do
-      stub_const('ENV', { 'GITHUB_USER_ACCESS_TOKEN' => 'asdf' })
+  class HappyGit
+    def self.clone(_, _, _)
+      true
     end
-
-    context 'with no error' do
-      it 'returns true' do
-        allow(Git).to receive(:clone).and_return true
-        expect(gripst.clone('123')).to eq true
-      end
-    end
-
-    context 'with error' do
-      it 'returns false' do
-        allow(Git).to receive(:clone).and_raise StandardError
-        expect(gripst.clone('123')).to eq false
-      end
+  end
+  class SadGit
+    def self.clone(_, _, _)
+      raise StandardError
     end
   end
 
-  describe '#run' do
-    let(:gripst) { Gripst::Runner.new }
-
-    before :each do
-      stub_const('ENV', { 'GITHUB_USER_ACCESS_TOKEN' => 'asdf' })
-    end
-
-    context 'when clone fails' do
-      it 'returns silently' do
-        allow(gripst).to receive(:clone).and_return false
-        expect(gripst).to receive(:loop_through_lines_of_a_gist).exactly(0).times
-        gripst.run('asdf', 'asdf')
-      end
-    end
-
-    context 'when clone succeeds' do
-      it 'returns with Find.prune if the path is a git dir' do
-        allow(gripst).to receive(:clone).and_return true
-        path = '.git'
-        allow(Find).to receive(:find).and_yield path
-        allow(gripst).to receive(:git_dir?).and_return true
-        expect(Find).to receive(:prune)
-        gripst.run('asdf', 'asdf')
-      end
+  class GHMock
+    def self.gists
+      ids = Array(1..3)
+      ids.map { |id| Struct.new(:id).new(id) }
     end
   end
 end
