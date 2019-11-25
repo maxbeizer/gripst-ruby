@@ -3,13 +3,13 @@
 RSpec.describe Gripst::Runner do
   describe 'clone' do
     it 'when clone succeeds it returns true' do
-      config = Gripst::Config.new(:git => HappyGit)
+      config = Gripst::Config.new(:git => HappyGit, :auth_token => 'asdf')
       result = Gripst::Runner.new(:config => config).clone(123)
       expect(result).to eq true
     end
 
     it 'when clone fails it returns false' do
-      config = Gripst::Config.new(:git => SadGit)
+      config = Gripst::Config.new(:git => SadGit, :auth_token => '123')
       result = Gripst::Runner.new(:config => config).clone(123)
       expect(result).to eq false
     end
