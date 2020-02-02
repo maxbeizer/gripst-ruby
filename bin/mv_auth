@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+
+set -e
+
+AUTH=~/.gripst
+BAK=~/.gripst.bak
+
+if test -f "$AUTH"; then
+    echo "$AUTH exists; moving"
+    mv $AUTH $BAK
+    exit
+fi
+
+if test -f "$BAK"; then
+    echo "$BAK exists; moving"
+    mv $BAK $AUTH
+    exit
+fi

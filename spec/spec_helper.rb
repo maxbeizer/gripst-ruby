@@ -1,3 +1,8 @@
+# frozen_string_literal: true
+
+require File.expand_path('../lib/gripst', __dir__)
+require 'pry'
+
 RSpec.configure do |config|
   config.mock_with :rspec do |mocks|
     mocks.verify_partial_doubles = true
@@ -8,9 +13,7 @@ RSpec.configure do |config|
 
   config.warnings = true
 
-  if config.files_to_run.one?
-    config.default_formatter = 'doc'
-  end
+  config.default_formatter = 'doc' if config.files_to_run.one?
 
   config.order = :random
 

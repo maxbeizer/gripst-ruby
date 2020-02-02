@@ -1,4 +1,6 @@
 #!/usr/bin/env ruby
+# frozen_string_literal: true
+
 require 'pathname'
 
 source_path = (Pathname.new(__FILE__).dirname + '../lib').expand_path
@@ -7,9 +9,9 @@ $LOAD_PATH << source_path
 require 'gripst'
 
 begin
-  gripst = Gripst::Gripst.new
+  gripst = Gripst::Runner.new(config: Gripst::Config.new.setup)
   puts 'gripsting'
   gripst.all_gist_ids.each { |id| gripst.run(ARGV[0], id) }
 rescue SystemExit, Interrupt
-  $stderr.puts 'Bye Bye'
+  warn 'Bye Bye'
 end
