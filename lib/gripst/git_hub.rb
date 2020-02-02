@@ -9,7 +9,7 @@ module Gripst
       end
 
       def login_with_oauth(oauth_token)
-        client = Octokit::Client.new :access_token => oauth_token
+        client = Octokit::Client.new access_token: oauth_token
         client.user.login
         client
       rescue Octokit::Unauthorized
@@ -39,7 +39,7 @@ module Gripst
 
     def authorize
       begin
-        auth_token = client.create_authorization :scopes => ['gists'], :note => 'gripst'
+        auth_token = client.create_authorization scopes: ['gists'], note: 'gripst'
       rescue Octokit::OneTimePasswordRequired
         otp = get_otp
         auth_token = authorize_with_otp otp
@@ -78,14 +78,14 @@ module Gripst
     end
 
     def client
-      @client ||= Octokit::Client.new :login => username,
-                                      :password => password
+      @client ||= Octokit::Client.new login: username,
+                                      password: password
     end
 
     def authorize_with_otp(token)
-      response = client.create_authorization :scopes => ['gist'],
-                                             :note => 'gripst',
-                                             :headers => { 'X-GitHub-OTP' => token }
+      response = client.create_authorization scopes: ['gist'],
+                                             note: 'gripst',
+                                             headers: { 'X-GitHub-OTP' => token }
       response[:token]
     rescue Octokit::UnprocessableEntity
       puts '---'

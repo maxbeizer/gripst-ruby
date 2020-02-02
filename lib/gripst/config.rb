@@ -3,7 +3,6 @@
 module Gripst
   # A class to hold configuration for Gripst
   class Config
-
     attr_reader :git_hub,
                 :git,
                 :auth_token

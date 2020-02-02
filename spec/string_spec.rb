@@ -1,21 +1,21 @@
 # frozen_string_literal: true
 
 RSpec.describe String do
-  context "colors" do
-    it "makes a string red" do
-      expect("foo".red).to eq red("foo")
+  context 'colors' do
+    it 'makes a string red' do
+      expect('foo'.red).to eq red('foo')
     end
 
-    it "makes a string green" do
-      expect("foo".green).to eq green("foo")
+    it 'makes a string green' do
+      expect('foo'.green).to eq green('foo')
     end
 
-    it "makes a string yellow" do
-      expect("foo".yellow).to eq yellow("foo")
+    it 'makes a string yellow' do
+      expect('foo'.yellow).to eq yellow('foo')
     end
 
-    it "makes a string pink" do
-      expect("foo".pink).to eq pink("foo")
+    it 'makes a string pink' do
+      expect('foo'.pink).to eq pink('foo')
     end
   end
 

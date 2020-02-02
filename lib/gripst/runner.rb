@@ -21,11 +21,11 @@ module Gripst
     end
 
     def clone(id)
-      @git.clone "https://#{@auth_token}@gist.github.com/#{id}.git", id, :path => "#{tmpdir}"
+      @git.clone "https://#{@auth_token}@gist.github.com/#{id}.git", id, path: tmpdir.to_s
       true
     rescue StandardError => e
-      $stderr.puts "ERROR: git fell down on #{id}"
-      $stderr.puts "ERROR: #{e}"
+      warn "ERROR: git fell down on #{id}"
+      warn "ERROR: #{e}"
       false
     end
 
@@ -35,6 +35,7 @@ module Gripst
       Find.find("#{tmpdir}/#{id}") do |path|
         param_obj = ParamObj.new(id, path)
         return Find.prune if git_dir? param_obj
+
         loop_through_lines_of_a_gist(regex, param_obj) if File.file? path
       end
     end
@@ -46,7 +47,7 @@ module Gripst
         begin
           display_match(param_obj, line) if /#{regex}/.match line
         rescue ArgumentError
-          $stderr.puts "Skipping... #{output_info_string(param_obj)} #{$!}"
+          warn "Skipping... #{output_info_string(param_obj)} #{$ERROR_INFO}"
           sleep 300
         end
       end
